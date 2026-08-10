@@ -1422,3 +1422,26 @@ color:white !important;
 
 
 }
+
+
+.site-footer{
+
+    width:100%;
+
+    padding:30px 20px 25px;
+
+    text-align:center;
+
+    color:rgba(255,255,255,.35);
+
+    font-size:.75rem;
+
+    letter-spacing:.5px;
+
+}
+
+.site-footer p{
+
+    margin:0;
+
+}
