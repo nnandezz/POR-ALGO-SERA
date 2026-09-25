@@ -22,7 +22,7 @@ if (
     waitingProgressPercent
 ) {
 
-    const waitingStart = new Date("2026-10-02T00:00:00");
+    const waitingStart = new Date("2025-11-02T00:00:00");    
     const anniversaryDate = new Date("2026-11-02T00:00:00");
 
     function updateAnniversaryWaiting() {
