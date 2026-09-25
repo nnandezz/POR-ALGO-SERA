@@ -8,6 +8,10 @@ const waitingSeconds = document.getElementById("waiting-seconds");
 const waitingProgressBar = document.getElementById("waiting-progress-bar");
 const waitingProgressPercent = document.getElementById("waiting-progress-percent");
 
+if (anniversaryWaiting) {
+    document.body.style.overflow = "hidden";
+}
+
 if (
     anniversaryWaiting &&
     waitingDays &&
@@ -32,6 +36,7 @@ if (
             anniversaryWaiting.classList.add("waiting-hidden");
 
             setTimeout(() => {
+                document.body.style.overflow = "";
                 anniversaryWaiting.remove();
             }, 600);
 
