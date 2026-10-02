@@ -12,55 +12,67 @@ const waitingProgressPercent = document.getElementById("waiting-progress-percent
 let audioContext = null;
 
 function initClockAudio() {
-    if (!audioContext) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContext) return;
-        audioContext = new AudioContext();
-    }
+    try {
+        if (!audioContext) {
+            const AudioContextClass =
+                window.AudioContext ||
+                window.webkitAudioContext;
 
-    if (audioContext.state === "suspended") {
-        audioContext.resume().catch(() => {});
+            if (!AudioContextClass) return;
+
+            audioContext = new AudioContextClass();
+        }
+
+        if (audioContext.state === "suspended") {
+            audioContext.resume().catch(() => {});
+        }
+    } catch (error) {
+        audioContext = null;
     }
 }
 
 function playClockTick() {
-    if (!audioContext || audioContext.state !== "running") return;
+    try {
+        if (!audioContext || audioContext.state !== "running") return;
 
-    const now = audioContext.currentTime;
+        const now = audioContext.currentTime;
 
-    const oscillator = audioContext.createOscillator();
-    const gain = audioContext.createGain();
+        const oscillator = audioContext.createOscillator();
+        const gain = audioContext.createGain();
 
-    oscillator.type = "sine";
-    oscillator.frequency.setValueAtTime(1200, now);
-    oscillator.frequency.exponentialRampToValueAtTime(700, now + 0.045);
+        oscillator.type = "sine";
+        oscillator.frequency.setValueAtTime(1200, now);
+        oscillator.frequency.exponentialRampToValueAtTime(700, now + 0.045);
 
-    gain.gain.setValueAtTime(0.0001, now);
-    gain.gain.exponentialRampToValueAtTime(0.055, now + 0.003);
-    gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+        gain.gain.setValueAtTime(0.0001, now);
+        gain.gain.exponentialRampToValueAtTime(0.055, now + 0.003);
+        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
 
-    oscillator.connect(gain);
-    gain.connect(audioContext.destination);
+        oscillator.connect(gain);
+        gain.connect(audioContext.destination);
 
-    oscillator.start(now);
-    oscillator.stop(now + 0.09);
+        oscillator.start(now);
+        oscillator.stop(now + 0.09);
 
-    const oscillator2 = audioContext.createOscillator();
-    const gain2 = audioContext.createGain();
+        const oscillator2 = audioContext.createOscillator();
+        const gain2 = audioContext.createGain();
 
-    oscillator2.type = "triangle";
-    oscillator2.frequency.setValueAtTime(850, now + 0.025);
-    oscillator2.frequency.exponentialRampToValueAtTime(500, now + 0.065);
+        oscillator2.type = "triangle";
+        oscillator2.frequency.setValueAtTime(850, now + 0.025);
+        oscillator2.frequency.exponentialRampToValueAtTime(500, now + 0.065);
 
-    gain2.gain.setValueAtTime(0.0001, now + 0.025);
-    gain2.gain.exponentialRampToValueAtTime(0.025, now + 0.03);
-    gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+        gain2.gain.setValueAtTime(0.0001, now + 0.025);
+        gain2.gain.exponentialRampToValueAtTime(0.025, now + 0.03);
+        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
 
-    oscillator2.connect(gain2);
-    gain2.connect(audioContext.destination);
+        oscillator2.connect(gain2);
+        gain2.connect(audioContext.destination);
 
-    oscillator2.start(now + 0.025);
-    oscillator2.stop(now + 0.095);
+        oscillator2.start(now + 0.025);
+        oscillator2.stop(now + 0.095);
+    } catch (error) {
+        return;
+    }
 }
 
 initClockAudio();
@@ -117,7 +129,7 @@ if (
 
     function updateAnniversaryWaiting() {
         const now = new Date();
-        let difference = anniversaryDate - now;
+        const difference = anniversaryDate - now;
 
         if (difference <= 0) {
             anniversaryWaiting.classList.add("waiting-hidden");
@@ -184,6 +196,8 @@ if (enterButton) {
 }
 
 window.addEventListener("scroll", () => {
+    if (!header) return;
+
     if (window.scrollY > 30) {
         header.classList.add("scrolled");
     } else {
@@ -290,7 +304,12 @@ const hoursElement = document.getElementById("hours");
 const minutesElement = document.getElementById("minutes");
 const secondsElement = document.getElementById("seconds");
 
-if (daysElement && hoursElement && minutesElement && secondsElement) {
+if (
+    daysElement &&
+    hoursElement &&
+    minutesElement &&
+    secondsElement
+) {
     const startDate = new Date("2025-11-02T00:00:00");
 
     function updateLoveTime() {
@@ -314,3 +333,4 @@ if (daysElement && hoursElement && minutesElement && secondsElement) {
 
     setInterval(updateLoveTime, 1000);
 }
+```
