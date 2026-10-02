@@ -1,72 +1,3 @@
-```js
-let audioContext = null;
-let lastTickSecond = null;
-
-function initAudio() {
-    if (!audioContext) {
-        const AudioContext = window.AudioContext || window.webkitAudioContext;
-
-        if (!AudioContext) {
-            return;
-        }
-
-        try {
-            audioContext = new AudioContext();
-        } catch (error) {
-            audioContext = null;
-        }
-    }
-
-    if (audioContext && audioContext.state === "suspended") {
-        audioContext.resume().catch(() => {});
-    }
-}
-
-function playTick() {
-    if (!audioContext || audioContext.state !== "running") {
-        return;
-    }
-
-    try {
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(900, audioContext.currentTime);
-
-        gain.gain.setValueAtTime(0.045, audioContext.currentTime);
-        gain.gain.exponentialRampToValueAtTime(
-            0.001,
-            audioContext.currentTime + 0.045
-        );
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillator.start();
-        oscillator.stop(audioContext.currentTime + 0.045);
-    } catch (error) {}
-}
-
-function tickOnSecondChange(second) {
-    if (lastTickSecond === null) {
-        lastTickSecond = second;
-        return;
-    }
-
-    if (second !== lastTickSecond) {
-        playTick();
-        lastTickSecond = second;
-    }
-}
-
-initAudio();
-
-["click", "touchstart", "keydown", "pointerdown"].forEach(event => {
-    window.addEventListener(event, initAudio, { once: true });
-});
-
-
 const anniversaryWaiting = document.getElementById("anniversary-waiting");
 
 const waitingDays = document.getElementById("waiting-days");
@@ -124,8 +55,6 @@ if (
         waitingHours.textContent = String(hours).padStart(2, "0");
         waitingMinutes.textContent = String(minutes).padStart(2, "0");
         waitingSeconds.textContent = String(seconds).padStart(2, "0");
-
-        tickOnSecondChange(seconds);
 
         let progress;
 
@@ -347,8 +276,6 @@ if (daysElement && hoursElement && minutesElement && secondsElement) {
         minutesElement.textContent = String(minutes).padStart(2, "0");
         secondsElement.textContent = String(seconds).padStart(2, "0");
 
-        tickOnSecondChange(seconds);
-
     }
 
     updateLoveTime();
@@ -356,4 +283,3 @@ if (daysElement && hoursElement && minutesElement && secondsElement) {
     setInterval(updateLoveTime, 1000);
 
 }
-```
