@@ -9,108 +9,6 @@ const waitingSeconds = document.getElementById("waiting-seconds");
 const waitingProgressBar = document.getElementById("waiting-progress-bar");
 const waitingProgressPercent = document.getElementById("waiting-progress-percent");
 
-let audioContext = null;
-
-function initClockAudio() {
-    try {
-        if (!audioContext) {
-            const AudioContextClass =
-                window.AudioContext ||
-                window.webkitAudioContext;
-
-            if (!AudioContextClass) return;
-
-            audioContext = new AudioContextClass();
-        }
-
-        if (audioContext.state === "suspended") {
-            audioContext.resume().catch(() => {});
-        }
-    } catch (error) {
-        audioContext = null;
-    }
-}
-
-function playClockTick() {
-    try {
-        if (!audioContext || audioContext.state !== "running") return;
-
-        const now = audioContext.currentTime;
-
-        const oscillator = audioContext.createOscillator();
-        const gain = audioContext.createGain();
-
-        oscillator.type = "sine";
-        oscillator.frequency.setValueAtTime(1200, now);
-        oscillator.frequency.exponentialRampToValueAtTime(700, now + 0.045);
-
-        gain.gain.setValueAtTime(0.0001, now);
-        gain.gain.exponentialRampToValueAtTime(0.055, now + 0.003);
-        gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
-
-        oscillator.connect(gain);
-        gain.connect(audioContext.destination);
-
-        oscillator.start(now);
-        oscillator.stop(now + 0.09);
-
-        const oscillator2 = audioContext.createOscillator();
-        const gain2 = audioContext.createGain();
-
-        oscillator2.type = "triangle";
-        oscillator2.frequency.setValueAtTime(850, now + 0.025);
-        oscillator2.frequency.exponentialRampToValueAtTime(500, now + 0.065);
-
-        gain2.gain.setValueAtTime(0.0001, now + 0.025);
-        gain2.gain.exponentialRampToValueAtTime(0.025, now + 0.03);
-        gain2.gain.exponentialRampToValueAtTime(0.0001, now + 0.09);
-
-        oscillator2.connect(gain2);
-        gain2.connect(audioContext.destination);
-
-        oscillator2.start(now + 0.025);
-        oscillator2.stop(now + 0.095);
-    } catch (error) {
-        return;
-    }
-}
-
-initClockAudio();
-
-["click", "touchstart", "keydown", "pointerdown"].forEach(eventName => {
-    window.addEventListener(eventName, initClockAudio, {
-        once: true,
-        passive: true
-    });
-});
-
-const clockSecondElements = [
-    document.getElementById("waiting-seconds"),
-    document.getElementById("seconds")
-].filter(Boolean);
-
-const previousClockSeconds = new Map();
-
-function checkClockTick() {
-    clockSecondElements.forEach(element => {
-        const currentValue = element.textContent;
-
-        if (!previousClockSeconds.has(element)) {
-            previousClockSeconds.set(element, currentValue);
-            return;
-        }
-
-        const previousValue = previousClockSeconds.get(element);
-
-        if (currentValue !== previousValue) {
-            previousClockSeconds.set(element, currentValue);
-            playClockTick();
-        }
-    });
-}
-
-setInterval(checkClockTick, 100);
-
 if (anniversaryWaiting) {
     document.body.style.overflow = "hidden";
 }
@@ -196,8 +94,6 @@ if (enterButton) {
 }
 
 window.addEventListener("scroll", () => {
-    if (!header) return;
-
     if (window.scrollY > 30) {
         header.classList.add("scrolled");
     } else {
@@ -333,4 +229,91 @@ if (
 
     setInterval(updateLoveTime, 1000);
 }
+
+(function () {
+    let audioContext = null;
+
+    function initAudio() {
+        try {
+            if (!audioContext) {
+                const AudioContextClass =
+                    window.AudioContext ||
+                    window.webkitAudioContext;
+
+                if (!AudioContextClass) {
+                    return;
+                }
+
+                audioContext = new AudioContextClass();
+            }
+
+            if (audioContext.state === "suspended") {
+                audioContext.resume().catch(() => {});
+            }
+        } catch (error) {
+            audioContext = null;
+        }
+    }
+
+    function playTick() {
+        try {
+            if (!audioContext || audioContext.state !== "running") {
+                return;
+            }
+
+            const now = audioContext.currentTime;
+
+            const oscillator = audioContext.createOscillator();
+            const gain = audioContext.createGain();
+
+            oscillator.type = "sine";
+            oscillator.frequency.setValueAtTime(1200, now);
+            oscillator.frequency.exponentialRampToValueAtTime(700, now + 0.045);
+
+            gain.gain.setValueAtTime(0.0001, now);
+            gain.gain.exponentialRampToValueAtTime(0.055, now + 0.003);
+            gain.gain.exponentialRampToValueAtTime(0.0001, now + 0.08);
+
+            oscillator.connect(gain);
+            gain.connect(audioContext.destination);
+
+            oscillator.start(now);
+            oscillator.stop(now + 0.09);
+        } catch (error) {
+            return;
+        }
+    }
+
+    initAudio();
+
+    ["click", "touchstart", "keydown", "pointerdown"].forEach(eventName => {
+        window.addEventListener(eventName, initAudio, {
+            once: true,
+            passive: true
+        });
+    });
+
+    const clockElements = [
+        document.getElementById("waiting-seconds"),
+        document.getElementById("seconds")
+    ].filter(Boolean);
+
+    const previousValues = new Map();
+
+    setInterval(() => {
+        clockElements.forEach(element => {
+            const value = element.textContent;
+
+            if (!previousValues.has(element)) {
+                previousValues.set(element, value);
+                return;
+            }
+
+            if (previousValues.get(element) !== value) {
+                previousValues.set(element, value);
+                playTick();
+            }
+        });
+    }, 100);
+})();
 ```
