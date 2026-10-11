@@ -1,4 +1,5 @@
 const anniversaryWaiting = document.getElementById("anniversary-waiting");
+const endScreen = document.getElementById("end-screen");
 
 const waitingDays = document.getElementById("waiting-days");
 const waitingHours = document.getElementById("waiting-hours");
@@ -7,6 +8,9 @@ const waitingSeconds = document.getElementById("waiting-seconds");
 
 const waitingProgressBar = document.getElementById("waiting-progress-bar");
 const waitingProgressPercent = document.getElementById("waiting-progress-percent");
+
+// Control whether to show the end screen
+const SHOW_END_SCREEN = false;
 
 if (anniversaryWaiting) {
     document.body.style.overflow = "hidden";
@@ -38,6 +42,11 @@ if (
             setTimeout(() => {
                 document.body.style.overflow = "";
                 anniversaryWaiting.remove();
+
+                // Show end screen if enabled
+                if (SHOW_END_SCREEN && endScreen) {
+                    endScreen.classList.add("active");
+                }
             }, 600);
 
             return;
