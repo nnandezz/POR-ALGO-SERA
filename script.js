@@ -10,7 +10,7 @@ const waitingProgressBar = document.getElementById("waiting-progress-bar");
 const waitingProgressPercent = document.getElementById("waiting-progress-percent");
 
 // Control whether to show the end screen
-const SHOW_END_SCREEN = false;
+const SHOW_END_SCREEN = true;
 
 if (anniversaryWaiting) {
     document.body.style.overflow = "hidden";
