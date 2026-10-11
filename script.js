@@ -9,8 +9,12 @@ const waitingSeconds = document.getElementById("waiting-seconds");
 const waitingProgressBar = document.getElementById("waiting-progress-bar");
 const waitingProgressPercent = document.getElementById("waiting-progress-percent");
 
-// Control whether to show the end screen
+// closure screen is fixed and permanent until the code is removed
 const SHOW_END_SCREEN = true;
+
+if (endScreen) {
+    endScreen.classList.add("active");
+}
 
 if (anniversaryWaiting) {
     document.body.style.overflow = "hidden";
@@ -35,22 +39,14 @@ if (
 
         let difference = anniversaryDate - now;
 
+        // fixed closure screen: never remove it, even if time passes
+        if (SHOW_END_SCREEN && endScreen) {
+            endScreen.classList.add("active");
+        }
+
         if (difference <= 0) {
-
-            anniversaryWaiting.classList.add("waiting-hidden");
-
-            setTimeout(() => {
-                document.body.style.overflow = "";
-                anniversaryWaiting.remove();
-
-                // Show end screen if enabled
-                if (SHOW_END_SCREEN && endScreen) {
-                    endScreen.classList.add("active");
-                }
-            }, 600);
-
+            // keep the closure screen visible forever until code is edited
             return;
-
         }
 
         const totalSeconds = Math.floor(difference / 1000);
