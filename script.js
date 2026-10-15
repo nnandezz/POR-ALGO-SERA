@@ -1,13 +1,113 @@
-const endScreen = document.getElementById("end-screen");
+const anniversaryWaiting = document.getElementById("anniversary-waiting");
 
-// closure screen is fixed and permanent until the code is removed
-const SHOW_END_SCREEN = true;
+const waitingDays = document.getElementById("waiting-days");
+const waitingHours = document.getElementById("waiting-hours");
+const waitingMinutes = document.getElementById("waiting-minutes");
+const waitingSeconds = document.getElementById("waiting-seconds");
 
-if (endScreen) {
-    endScreen.classList.add("active");
+const waitingProgressBar = document.getElementById("waiting-progress-bar");
+const waitingProgressPercent = document.getElementById("waiting-progress-percent");
+
+if (anniversaryWaiting) {
+    document.body.style.overflow = "hidden";
 }
 
+if (
+    anniversaryWaiting &&
+    waitingDays &&
+    waitingHours &&
+    waitingMinutes &&
+    waitingSeconds &&
+    waitingProgressBar &&
+    waitingProgressPercent
+) {
+
+    const waitingStart = new Date("2025-11-02T00:00:00");    
+    const anniversaryDate = new Date("2026-11-02T00:00:00");
+
+    function updateAnniversaryWaiting() {
+
+        const now = new Date();
+
+        let difference = anniversaryDate - now;
+
+        if (difference <= 0) {
+
+            anniversaryWaiting.classList.add("waiting-hidden");
+
+            setTimeout(() => {
+                document.body.style.overflow = "";
+                anniversaryWaiting.remove();
+            }, 600);
+
+            return;
+
+        }
+
+        const totalSeconds = Math.floor(difference / 1000);
+
+        const days = Math.floor(totalSeconds / 86400);
+        const hours = Math.floor((totalSeconds % 86400) / 3600);
+        const minutes = Math.floor((totalSeconds % 3600) / 60);
+        const seconds = totalSeconds % 60;
+
+        waitingDays.textContent = days;
+        waitingHours.textContent = String(hours).padStart(2, "0");
+        waitingMinutes.textContent = String(minutes).padStart(2, "0");
+        waitingSeconds.textContent = String(seconds).padStart(2, "0");
+
+        let progress;
+
+        if (now <= waitingStart) {
+
+            progress = 0;
+
+        } else {
+
+            progress =
+                ((now - waitingStart) /
+                (anniversaryDate - waitingStart)) * 100;
+
+        }
+
+        progress = Math.max(0, Math.min(100, progress));
+
+        waitingProgressBar.style.width = progress + "%";
+        waitingProgressPercent.textContent = Math.floor(progress) + "%";
+
+    }
+
+    updateAnniversaryWaiting();
+
+    setInterval(updateAnniversaryWaiting, 1000);
+
+}
+
+
+const popup = document.getElementById("welcome-popup");
+const enterButton = document.getElementById("enter-button");
 const header = document.getElementById("header");
+
+if (popup && localStorage.getItem("welcomeSeen")) {
+    popup.style.display = "none";
+}
+
+if (enterButton) {
+
+    enterButton.addEventListener("click", () => {
+
+        popup.classList.add("hidden");
+
+        localStorage.setItem("welcomeSeen", "true");
+
+        setTimeout(() => {
+            popup.style.display = "none";
+        }, 500);
+
+    });
+
+}
+
 
 window.addEventListener("scroll", () => {
 
@@ -79,6 +179,29 @@ if (charactersToggle && charactersMenu) {
             charactersMenu.classList.contains("active") ? "▲" : "▼";
 
     });
+
+}
+
+
+const loveLoading = document.getElementById("love-loading");
+
+if (loveLoading) {
+
+    if (sessionStorage.getItem("loveLoaded")) {
+
+        loveLoading.remove();
+
+    } else {
+
+        sessionStorage.setItem("loveLoaded", "true");
+
+        setTimeout(() => {
+
+            loveLoading.remove();
+
+        }, window.innerWidth <= 900 ? 4500 : 10000);
+
+    }
 
 }
 
