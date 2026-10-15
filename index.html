@@ -27,16 +27,61 @@
 
     <div id="background-overlay"></div>
 
-    <div id="end-screen">
+    <div id="anniversary-waiting">
 
-        <video class="end-background-video" autoplay muted loop playsinline>
+        <video class="waiting-background-video" autoplay muted loop playsinline>
             <source src="./nocheestrellada.mp4" type="video/mp4">
         </video>
 
-        <div class="end-content">
+        <div class="waiting-content">
 
-            <p class="end-text-main">lo siento, hemos cerrado</p>
-            <p class="end-text-sub">el camino se ha acabado, por algo será...</p>
+            <p class="waiting-intro">
+                Hay cosas que pasan porque tenían que pasar...
+            </p>
+
+            <h1>
+                POR ALGO SERÁ
+            </h1>
+
+            <div class="waiting-countdown">
+
+                <div class="waiting-time-box">
+                    <span id="waiting-days">0</span>
+                    <small>DÍAS</small>
+                </div>
+
+                <div class="waiting-time-box">
+                    <span id="waiting-hours">0</span>
+                    <small>HORAS</small>
+                </div>
+
+                <div class="waiting-time-box">
+                    <span id="waiting-minutes">0</span>
+                    <small>MINUTOS</small>
+                </div>
+
+                <div class="waiting-time-box">
+                    <span id="waiting-seconds">0</span>
+                    <small>SEGUNDOS</small>
+                </div>
+
+            </div>
+
+            <p class="waiting-date">
+                CASI CASI
+            </p>
+
+            <div class="waiting-progress-wrapper">
+
+                <div class="waiting-progress-info">
+                    <span id="waiting-progress-percent">0%</span>
+                </div>
+
+                <div class="waiting-progress">
+                    <div id="waiting-progress-bar"></div>
+                </div>
+
+            </div>
 
         </div>
 
@@ -56,6 +101,37 @@
         </nav>
 
     </header>
+
+    <div id="welcome-popup">
+
+        <div class="popup">
+
+            <h1>¡Feliz aniversario, princesa!</h1>
+
+            <p>
+                Hoy por fin llega mi día favorito, el día que todas las discusiones, peleas y lloreras que hemos tenido llegan a una conclusión: nuestro primer año juntos.
+            </p>
+
+            <p>
+                Antes de empezar quiero darte las gracias por estar aquí.
+                Todo lo que vas a ver en esta página ha sido creado con muchísimo cariño, pensando únicamente en ti.
+            </p>
+
+            <button id="enter-button">
+                Entrar
+            </button>
+
+        </div>
+
+    </div>
+
+    <div id="love-loading">
+
+        <span>Cargando todo mi amor...</span>
+
+        <div class="loading-progress"></div>
+
+    </div>
 
     <main>
 
